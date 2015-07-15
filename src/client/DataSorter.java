@@ -1,4 +1,4 @@
-package com.company;
+package client;
 
 /**
  * Created by harrison on 15/07/15.
