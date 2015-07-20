@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 public class File {
     InputStream input;
-    private int blocksize = 50; //size in kilobytes, later to be adjustable, potentially dynamically
+    protected int blocksize = 50000; //size in bytes, later to be adjustable, potentially dynamically
 
     private Block[] blocks;
     String[] hashes;
@@ -19,13 +19,13 @@ public class File {
         input = new BufferedInputStream(new FileInputStream(path));
         long length = new java.io.File(path).length();
         if (length / blocksize == length % blocksize) {
-            numofblocks = (int) (length % (blocksize * 1000));
+            numofblocks = (int) length % blocksize ;
         }
-        else numofblocks = (int) (new java.io.File(path).length() % (blocksize * 1000) + 1); //this actually makes me cry
+        else numofblocks = (int) ((new java.io.File(path).length() % blocksize) + 1); //this actually makes me cry
         //then initialise hashes with the calculated blocknum
         // then instantiate block array
         blocks = new Block[numofblocks];
-       for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i) ; //initialise and generate block objects that calculate their own hash and number
+        for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i) ; //initialise and generate block objects that calculate their own hash and number
         //get hashes of all blocks
         hashes = new String[numofblocks];
         for (int i = 0; i < numofblocks; i++) hashes[i] = blocks[i].hash;
