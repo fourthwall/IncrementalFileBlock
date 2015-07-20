@@ -1,33 +1,38 @@
 package client; /**
  * Created by harrison on 15/07/15.
  */
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class File {
-    private int blocksize;
+    InputStream input;
+    private int blocksize = 50; //size in kilobytes, later to be adjustable, potentially dynamically
 
-    private int blocknum;
     private Block[] blocks;
-    String[] hashes = new String[blocknum];
-    protected int blockcounter = 0; //allows blocks to infer their number - must create all blocks in sequence;
+    String[] hashes;
 
-
-    private String Path;
-    public File(String path) {
-        Path = path;
-        blocks = new Block[blocknum]; //initialise and generate block objects that calculate their own hash and number
+    public File(String path) throws FileNotFoundException  {
+        int numofblocks;
+        input = new BufferedInputStream(new FileInputStream(path));
+        long length = new java.io.File(path).length();
+        if (length / blocksize == length % blocksize) {
+            numofblocks = (int) (length % (blocksize * 1000));
+        }
+        else numofblocks = (int) (new java.io.File(path).length() % (blocksize * 1000) + 1); //this actually makes me cry
+        //then initialise hashes with the calculated blocknum
+        // then instantiate block array
+        blocks = new Block[numofblocks];
+       for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i) ; //initialise and generate block objects that calculate their own hash and number
+        //get hashes of all blocks
+        hashes = new String[numofblocks];
+        for (int i = 0; i < numofblocks; i++) hashes[i] = blocks[i].hash;
     }
 
 
     public File() {
-
-    }
-
-    public String toString() {
-        return hashPath(Path);
-    }
-
-    public String[] blockHashes() {
-        for (int i = 0; i < blocknum; i++) hashes[i] = blocks[i].hash;
-        return hashes;
 
     }
 
