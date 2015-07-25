@@ -9,23 +9,22 @@ import java.io.InputStream;
 
 public class File {
     InputStream input;
-    protected int blocksize = 50000; //size in bytes, later to be adjustable, potentially dynamically
+    protected int blocksize = 1000000;//size in bytes, later to be adjustable, potentially dynamically
+    private int numofblocks;
 
     private Block[] blocks;
     String[] hashes;
 
     public File(String path) throws FileNotFoundException  {
-        int numofblocks;
         input = new BufferedInputStream(new FileInputStream(path));
         long length = new java.io.File(path).length();
-        if (length / blocksize == length % blocksize) {
-            numofblocks = (int) length % blocksize ;
-        }
-        else numofblocks = (int) ((new java.io.File(path).length() % blocksize) + 1); //this actually makes me cry
+        //blocksize = (int) (length / numofblocks);
+        numofblocks = (int) length / blocksize ;
+        if (length % blocksize != 0) numofblocks++;
         //then initialise hashes with the calculated blocknum
         // then instantiate block array
         blocks = new Block[numofblocks];
-        for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i) ; //initialise and generate block objects that calculate their own hash and number
+        for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i, input, blocksize) ; //initialise and generate block objects that calculate their own hash and number
         //get hashes of all blocks
         hashes = new String[numofblocks];
         for (int i = 0; i < numofblocks; i++) hashes[i] = blocks[i].hash;
@@ -38,10 +37,6 @@ public class File {
 
     private String hashblock(int block) {
         //TBC
-        return null;
-    }
-
-    private static String hashPath(String Path) {
         return null;
     }
 
