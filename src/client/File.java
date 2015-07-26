@@ -34,10 +34,6 @@ public class File {
     }
 
 
-    private String hashblock(int block) {
-        //TBC
-        return null;
-    }
 
     public Block[] getBlocks(int[] blocksreq) { //get an array of blocks from an integer array containing the desired block numbers
         Block[] blockArr = new Block[blocksreq.length];
