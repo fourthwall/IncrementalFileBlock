@@ -9,11 +9,10 @@ import java.io.InputStream;
 
 public class File {
     InputStream input;
-    protected int blocksize = 1000000;//size in bytes, later to be adjustable, potentially dynamically
+    protected int blocksize = 1000000;//size in bytes, later to be adjustable, potentially in tiers.
     private int numofblocks;
 
     private Block[] blocks;
-    String[] hashes;
 
     public File(String path) throws FileNotFoundException  {
         input = new BufferedInputStream(new FileInputStream(path));
@@ -24,16 +23,16 @@ public class File {
         //then initialise hashes with the calculated blocknum
         // then instantiate block array
         blocks = new Block[numofblocks];
-        for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i, input, blocksize) ; //initialise and generate block objects that calculate their own hash and number
+        for (int i = 0; i < numofblocks; i++)  blocks[i] = new Block(i) ; //initialise and generate block objects that calculate their own hash and number
+    }
+
+    public String[] hashes() {
         //get hashes of all blocks
-        hashes = new String[numofblocks];
-        for (int i = 0; i < numofblocks; i++) hashes[i] = blocks[i].hash;
+        String[] arr = new String[numofblocks];
+        for (int i = 0; i < numofblocks; i++) arr[i] = blocks[i].hash;
+        return arr;
     }
 
-
-    public File() {
-
-    }
 
     private String hashblock(int block) {
         //TBC
@@ -46,6 +45,36 @@ public class File {
             blockArr[i] = blocks[blocksreq[i]];
         }
         return blockArr;
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private class Block {
+        private int offset;
+        String hash;
+        public Block(int Number) {
+            offset = Number * blocksize;
+
+
+        }
+        String hash()  {
+
+            return null; // call to hashing function here
+        }
+
+        byte[] data() throws java.io.IOException {
+            byte[] buffer = new byte[blocksize];
+            input.read(buffer, offset, blocksize);
+            return buffer;
+        }
 
     }
 

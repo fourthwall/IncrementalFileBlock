@@ -5,7 +5,8 @@ package client;
  */
 public class Network {
     //private TCPChannel chan = new TCPChannel();
-    public int[] SendBlockHashes(Block[] blocks) { //returns array of requested blocks
+    public int[] SendBlockHashes(File file) { //send hashes of all blocks in file
+        file.hashes();
         return null;
 
     }
